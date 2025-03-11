@@ -1,28 +1,25 @@
-// server.js
-const WebSocket = require('ws');
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
-// Create WebSocket server on port 3000
-const wss = new WebSocket.Server({ port: 3000 });
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
-wss.on('connection', (ws) => {
-    console.log('A client connected');
-    
-    // Broadcast messages to all connected clients
-    ws.on('message', (message) => {
-        console.log('Received message: ' + message);
-        wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
+app.use(express.static("public")); // Serve frontend files
+
+io.on("connection", (socket) => {
+    console.log("A user connected");
+
+    socket.on("message", (data) => {
+        io.emit("message", data); // Broadcast to all users
     });
 
-    ws.on('close', () => {
-        console.log('A client disconnected');
+    socket.on("disconnect", () => {
+        console.log("A user disconnected");
     });
-
-    // Send a welcome message when the client connects
-    ws.send('Welcome to the WebSocket server!');
 });
 
-console.log('WebSocket server is running on ws://localhost:3000');
+server.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
+});
