@@ -1,11 +1,13 @@
 {
-  "name": "websocket-chat",
+  "name": "global-chat",
   "version": "1.0.0",
+  "description": "A global chat app with real-time messaging",
   "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  },
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "ws": "^8.7.0"
   }
 }
